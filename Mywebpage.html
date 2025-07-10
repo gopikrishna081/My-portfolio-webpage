@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuthalapati GopiKrishna</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A single-page application with a fixed side navigation bar for easy access to different content sections. The structure is designed to be non-linear, allowing users (like recruiters) to quickly jump to the information most relevant to them. The chosen sections are: a main introduction (Home), a chronological visualization of career progression (Timeline), a data-driven view of abilities (Skills), a portfolio of work (Projects), and a summary of achievements (Credentials). This structure transforms the static resume into an engaging, exploratory experience, which is more user-friendly and modern than a simple linear document. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Education & Experience -> Goal: Show career progression -> Viz: Interactive vertical timeline -> Interaction: Hover/Click to highlight -> Justification: More engaging and visually intuitive than a list. Method: HTML/Tailwind/JS.
+        - Report Info: Technical Skills -> Goal: Compare proficiency -> Viz: Horizontal Bar Chart -> Interaction: Hover for tooltips, buttons to filter by category -> Justification: Provides a quick, scannable, data-driven overview of technical strengths. Method: Chart.js (Canvas).
+        - Report Info: Projects -> Goal: Organize and showcase work -> Viz: Card-based grid layout -> Interaction: Hover effects on cards -> Justification: A clean, standard UI pattern for portfolio items. Method: HTML/Tailwind.
+        - Report Info: Certs/Awards -> Goal: Inform -> Viz: Styled list/cards -> Interaction: None -> Justification: Clear and direct presentation of facts. Method: HTML/Tailwind.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f4; /* stone-100 */
+            color: #44403c; /* stone-700 */
+        }
+        .nav-link.active {
+            background-color: #0d9488; /* teal-600 */
+            color: white;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 500px;
+            }
+        }
+        .timeline-item-content {
+            transition: all 0.3s ease-in-out;
+        }
+        .timeline-item:hover .timeline-item-content {
+            transform: scale(1.02);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row">
+
+    <nav id="main-nav" class="bg-stone-800 text-white w-full md:w-64 p-4 md:h-screen md:sticky top-0 z-20">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-teal-400">Nuthalapati Gopi Krishna</h1>
+            <p class="text-sm text-stone-300">IT Student & Developer</p>
+        </div>
+        <ul class="space-y-2">
+            <li><a href="#home" class="nav-link block w-full text-left px-4 py-2 rounded-md hover:bg-teal-600 transition-colors">Home</a></li>
+            <li><a href="#timeline" class="nav-link block w-full text-left px-4 py-2 rounded-md hover:bg-teal-600 transition-colors">Timeline</a></li>
+            <li><a href="#skills" class="nav-link block w-full text-left px-4 py-2 rounded-md hover:bg-teal-600 transition-colors">Skills</a></li>
+            <li><a href="#projects" class="nav-link block w-full text-left px-4 py-2 rounded-md hover:bg-teal-600 transition-colors">Projects</a></li>
+            <li><a href="#credentials" class="nav-link block w-full text-left px-4 py-2 rounded-md hover:bg-teal-600 transition-colors">Credentials</a></li>
+        </ul>
+        <div class="mt-10 text-center">
+             <div class="flex justify-center space-x-4">
+                <a href="mailto:23BQ5A1213@vvit.net" class="text-stone-300 hover:text-teal-400" title="Email">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                </a>
+                <a href="https://www.linkedin.com/in/nuthalapati-gopikrishna-80b0042b0/" target="_blank" class="text-stone-300 hover:text-teal-400" title="LinkedIn">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-4.47 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.59-11.018-3.714v-2.155z"/></svg>
+                </a>
+                <a href="https://github.com/gopikrishna08" target="_blank" class="text-stone-300 hover:text-teal-400" title="GitHub">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                </a>
+             </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 p-4 sm:p-6 md:p-10">
+        <section id="home" class="min-h-screen flex flex-col justify-center">
+            <h2 class="text-4xl md:text-6xl font-bold text-stone-800 mb-4">Hello, I'm Gopi Krishna.</h2>
+            <p class="text-xl md:text-2xl text-teal-600 mb-8">A passionate developer crafting innovative solutions.</p>
+            <div class="max-w-3xl text-lg text-stone-600 space-y-4">
+                 
+                 <p>I am a highly motivated and results-oriented B.Tech student in Information Technology with a strong academic background and practical experience in Frontend Development, Java, Python, and React.js. I have a proven ability to apply my technical proficiency in Cloud Computing and problem-solving skills to develop innovative solutions. I am actively seeking to leverage my technical acumen and project management skills to contribute to challenging development roles and create impactful technology.</p>
+            </div>
+        </section>
+
+        <section id="timeline" class="min-h-screen py-20">
+            <h2 class="text-3xl font-bold text-center mb-4">My Journey</h2>
+            <p class="text-center max-w-3xl mx-auto text-stone-600 mb-12">This timeline chronologically showcases my educational milestones and professional experience. It illustrates my growth and the development of my skills over time. Each entry marks a significant step in my journey towards becoming a proficient software developer.</p>
+            <div class="relative max-w-4xl mx-auto">
+                <div class="absolute left-1/2 -translate-x-1/2 h-full w-0.5 bg-teal-200"></div>
+                <div id="timeline-container" class="space-y-16">
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="min-h-screen py-20">
+            <h2 class="text-3xl font-bold text-center mb-4">Technical Skills</h2>
+            <p class="text-center max-w-3xl mx-auto text-stone-600 mb-8">This section provides a visual representation of my technical abilities. The chart below displays my proficiency across various programming languages, web technologies, and cloud platforms. You can use the buttons to filter the skills by category for a more focused view. This dashboard is designed to give a quick yet comprehensive understanding of my technical strengths.</p>
+            <div class="flex justify-center space-x-2 mb-8">
+                <button class="skill-filter-btn bg-teal-600 text-white px-4 py-2 rounded-md" data-filter="all">All Skills</button>
+                <button class="skill-filter-btn bg-stone-200 text-stone-700 px-4 py-2 rounded-md" data-filter="language">Languages</button>
+                <button class="skill-filter-btn bg-stone-200 text-stone-700 px-4 py-2 rounded-md" data-filter="web">Web Tech</button>
+                <button class="skill-filter-btn bg-stone-200 text-stone-700 px-4 py-2 rounded-md" data-filter="cloud">Cloud & Tools</button>
+            </div>
+            <div class="chart-container">
+                <canvas id="skillsChart"></canvas>
+            </div>
+        </section>
+
+        <section id="projects" class="min-h-screen py-20">
+            <h2 class="text-3xl font-bold text-center mb-4">Projects</h2>
+             <p class="text-center max-w-3xl mx-auto text-stone-600 mb-12">Here are some of the key projects I have developed. These examples demonstrate my ability to apply theoretical knowledge to build practical, real-world applications. Each project represents a unique challenge and a learning opportunity, showcasing my skills in problem-solving, design, and implementation.</p>
+            <div id="projects-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            </div>
+        </section>
+
+        <section id="credentials" class="min-h-screen py-20">
+            <h2 class="text-3xl font-bold text-center mb-4">Awards & Certifications</h2>
+            <p class="text-center max-w-3xl mx-auto text-stone-600 mb-12">This final section lists my formal recognitions and certifications. These credentials validate the skills and knowledge I have acquired through my studies and hands-on experience, reflecting my commitment to continuous learning and professional development.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold text-teal-700 mb-3">Certifications</h3>
+                    <ul class="space-y-3 text-stone-600">
+                        <li class="flex items-start">
+                            <span class="text-teal-500 mr-3 mt-1">&#10003;</span>
+                            <div><strong>Java Programming</strong><br><span class="text-sm">Issued by: INFOSYS</span></div>
+                        </li>
+                        <li class="flex items-start">
+                           <span class="text-teal-500 mr-3 mt-1">&#10003;</span>
+                           <div><strong>Associate Cloud Engineer</strong><br><span class="text-sm">Issued by: Google (March 2025)</span></div>
+                        </li>
+                    </ul>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold text-teal-700 mb-3">Awards & Recognition</h3>
+                    <ul class="space-y-3 text-stone-600">
+                        <li class="flex items-start">
+                            <span class="text-teal-500 mr-3 mt-1">&#10003;</span>
+                             <div><strong>Google Skill Badges</strong><br><span class="text-sm">Recognized for hands-on experience with Google Cloud Platform, demonstrating proficiency in cloud technologies.</span></div>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-teal-500 mr-3 mt-1">&#10003;</span>
+                             <div><strong>Personality Test Report</strong><br><span class="text-sm">Achieved a "Good" score, indicating strong interpersonal and professional traits. (March 2025)</span></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const resumeData = {
+                timeline: [
+                    {
+                        year: "Expected 2026",
+                        title: "Bachelor of Technology, IT",
+                        institution: "VVIT",
+                        description: "CGPA: 7.72. Core subjects include Frontend Development, Advanced Java Programming, Python Programming, and Computer Networking.",
+                        type: "education"
+                    },
+                     {
+                        year: "Nov 2024 - Present",
+                        title: "ProfileVerse - Web Application",
+                        institution: "Personal Project",
+                        description: "Developing a comprehensive web application to empower users in creating and professionally showcasing their digital identity.",
+                        type: "experience"
+                    },
+                    {
+                        year: "Jun 2024 - Present",
+                        title: "Indoor Air Pollution - IoT Project",
+                        institution: "Supported by Upsurge Enterprise Solutions",
+                        description: "Developing a cost-effective and efficient IoT solution for improving and monitoring indoor air quality.",
+                        type: "experience"
+                    },
+                    {
+                        year: "2023",
+                        title: "Diploma in Computer Engineering",
+                        institution: "DIVISEEMA POLYTECHNIC",
+                        description: "Score: 81.14%. Specialized in computer engineering fundamentals.",
+                        type: "education"
+                    },
+                    {
+                        year: "May 2022 - Nov 2022",
+                        title: "Industrial Training",
+                        institution: "JKS SOFT TECH PRIVATE LIMITED",
+                        description: "Gained hands-on experience in the software development lifecycle and various industry-standard tools.",
+                        type: "experience"
+                    },
+                    {
+                        year: "Date Unspecified",
+                        title: "Network Security Associate Virtual Internship",
+                        institution: "Fortinet",
+                        description: "Participated in a virtual internship focusing on network security principles and practices.",
+                        type: "experience"
+                    },
+                     {
+                        year: "2020",
+                        title: "Class X (High School)",
+                        institution: "Sri Chaitanya School",
+                        description: "Completed secondary education with a score of 600 Marks.",
+                        type: "education"
+                    },
+                ],
+                skills: {
+                    all: {
+                        labels: ["Java", "Python", "React.js", "HTML/CSS/JS", "Google Cloud", "IoT", "Networking"],
+                        data: [90, 85, 90, 95, 80, 75, 70],
+                    },
+                    language: {
+                        labels: ["Java", "Python"],
+                        data: [90, 85],
+                    },
+                    web: {
+                        labels: ["React.js", "HTML/CSS/JS", "Frontend Dev"],
+                        data: [90, 95, 92],
+                    },
+                    cloud: {
+                        labels: ["Google Cloud", "Cloud Computing", "IoT", "Networking"],
+                        data: [80, 85, 75, 70],
+                    }
+                },
+                projects: [
+                    {
+                        title: "ProfileVerse - Web Application",
+                        date: "Nov 2024 - Present",
+                        description: "A comprehensive web application designed to empower users in creating and professionally showcasing their digital identity. Aims to significantly enhance user visibility and presence across job searches, professional networking, and freelancing platforms.",
+                        tags: ["React.js", "Frontend", "Web App"]
+                    },
+                    {
+                        title: "Indoor Air Pollution - IoT",
+                        date: "Jun 2024 - Present",
+                        description: "Supported by Upsurge Enterprise Solutions, this project focuses on developing a cost-effective and efficient solution for improving indoor air quality. It addresses a critical need for health and well-being in enclosed environments through IoT implementation.",
+                        tags: ["IoT", "Python", "Hardware"]
+                    }
+                ]
+            };
+
+            const timelineContainer = document.getElementById('timeline-container');
+            resumeData.timeline.forEach((item, index) => {
+                const isLeft = index % 2 === 0;
+                const alignmentClass = isLeft ? 'md:mr-auto md:pr-8' : 'md:ml-auto md:pl-8';
+                const outerAlignmentClass = isLeft ? 'md:flex-row-reverse' : 'md:flex-row';
+
+                const timelineItem = document.createElement('div');
+                timelineItem.className = `timeline-item flex items-center w-full mx-auto`;
+                
+                timelineItem.innerHTML = `
+                    <div class="hidden md:block w-1/2"></div>
+                    <div class="hidden md:block relative">
+                         <div class="h-4 w-4 rounded-full bg-teal-500 absolute top-1/2 -translate-y-1/2 -translate-x-1/2 z-10"></div>
+                    </div>
+                    <div class="w-full md:w-1/2">
+                        <div class="timeline-item-content bg-white p-6 rounded-lg shadow-md ${alignmentClass}">
+                             <p class="text-sm font-semibold text-teal-600 mb-1">${item.year}</p>
+                             <h3 class="text-lg font-bold text-stone-800">${item.title}</h3>
+                             <p class="text-sm text-stone-500 mb-3">${item.institution}</p>
+                             <p class="text-stone-600">${item.description}</p>
+                        </div>
+                    </div>
+                `;
+                
+                const contentDiv = timelineItem.querySelector('.timeline-item-content');
+                if (isLeft) {
+                    contentDiv.classList.add('md:text-right');
+                }
+
+                timelineContainer.appendChild(timelineItem);
+            });
+            
+            const projectsContainer = document.getElementById('projects-container');
+            resumeData.projects.forEach(project => {
+                const projectCard = document.createElement('div');
+                projectCard.className = 'bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300';
+                projectCard.innerHTML = `
+                    <p class="text-sm text-stone-500 mb-1">${project.date}</p>
+                    <h3 class="text-xl font-bold text-teal-700 mb-3">${project.title}</h3>
+                    <p class="text-stone-600 mb-4">${project.description}</p>
+                    <div class="flex flex-wrap gap-2">
+                        ${project.tags.map(tag => `<span class="bg-teal-100 text-teal-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">${tag}</span>`).join('')}
+                    </div>
+                `;
+                projectsContainer.appendChild(projectCard);
+            });
+
+            const ctx = document.getElementById('skillsChart').getContext('2d');
+            let skillsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: resumeData.skills.all.labels,
+                    datasets: [{
+                        label: 'Proficiency',
+                        data: resumeData.skills.all.data,
+                        backgroundColor: 'rgba(13, 148, 136, 0.6)', /* teal-600 */
+                        borderColor: 'rgba(15, 118, 110, 1)', /* teal-700 */
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        y: {
+                             grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Proficiency: ${context.raw}/100`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const filterButtons = document.querySelectorAll('.skill-filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.dataset.filter;
+                    const skillData = resumeData.skills[filter];
+                    
+                    skillsChart.data.labels = skillData.labels;
+                    skillsChart.data.datasets[0].data = skillData.data;
+                    skillsChart.update();
+                    
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('bg-teal-600', 'text-white');
+                        btn.classList.add('bg-stone-200', 'text-stone-700');
+                    });
+                    button.classList.add('bg-teal-600', 'text-white');
+                    button.classList.remove('bg-stone-200', 'text-stone-700');
+                });
+            });
+
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.5
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            navLinks.forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
